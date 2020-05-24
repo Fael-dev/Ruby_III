@@ -1,24 +1,5 @@
 require_relative "ui"
 
-def move_fantasma(mapa, linha, coluna)
-	mapa[linha][coluna] = " "
-	linha += 0
-	coluna += 1
-	mapa[linha][coluna] = "F"
-end
-
-def move_fantasmas(mapa)
-	caractere_fantasma = "F"
-	mapa.each_with_index do |linha_atual, linha|
-		linha_atual.chars.each_with_index do |caractere_atual, coluna|
-			eh_fantasma = caractere_atual == caractere_fantasma
-			if eh_fantasma
-				move_fantasma mapa, linha, coluna
-			end
-		end
-	end
-end
-
 def le_mapa(numero)
 	arquivo = "mapa#{numero}.txt"
   texto = File.read arquivo
@@ -65,6 +46,53 @@ def posicao_valida?(mapa, posicao)
 		return false
 	end
 	true
+end
+
+def move_fantasmas mapa
+    fantasma = "F"
+    mapa.each_with_index do |linha_atual, linha|
+        linha_atual.chars.each_with_index do |caracter_atual, caracter|
+            eh_fantasma = caracter_atual == fantasma
+            if eh_fantasma
+                move_fantasma mapa,[linha,caracter]
+            end
+        end
+    end
+end
+
+def move_fantasma (mapa, posicao)
+    posicoes = posicoes_validas_a_partir_de mapa, posicao
+    return if posicoes.empty?
+    nova_posicao = posicoes[0]
+
+    mapa[posicao[0]][posicao[1]] = " "
+    mapa[nova_posicao[0]][nova_posicao[1]] = "F"
+end
+
+def posicoes_validas_a_partir_de(mapa, posicao)
+    posicoes = []
+
+    baixo = [posicao[0] + 1, posicao[1]]
+    if posicao_valida? mapa, baixo
+        posicoes << baixo
+    end
+
+    direita = [posicao[0], posicao[1] + 1]
+    if posicao_valida? mapa,direita
+        posicoes << direita
+    end
+
+    cima = [posicao[0] - 1, posicao[1]]
+    if posicao_valida? mapa,cima
+        posicoes << cima
+    end
+
+    esquerda = [posicao[0], posicao[1] - 1]
+    if posicao_valida? mapa,esquerda
+        posicoes << esquerda
+    end
+
+    posicoes
 end
 
 def joga(nome)
