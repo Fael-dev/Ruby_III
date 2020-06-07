@@ -90,7 +90,7 @@ def jogador_perdeu?(mapa)
 end
 
 def joga(nome)
-	mapa = le_mapa 2
+	mapa = le_mapa 3
 	while true
 		desenha mapa
 		direcao = pede_movimento
@@ -101,7 +101,12 @@ def joga(nome)
     	next
 		end
 		heroi.remove_do mapa
-		heroi.coloca_no mapa
+		if mapa[nova_posicao.linha][nova_posicao.coluna] == "*"
+			for direita in 1..4
+				mapa[nova_posicao.linha][nova_posicao.coluna + direita] = " "
+			end
+		end
+		nova_posicao.coloca_no mapa
 		
 		mapa = move_fantasmas mapa
 
